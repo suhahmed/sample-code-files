@@ -1,0 +1,56 @@
+name: Promote to prod
+
+# Manually triggered. Opens a PR that bumps the prod image tag.
+# Merging the PR (after review + required checks) is the production deployment.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag to promote (e.g. sha-1a2b3c4). Leave blank to promote what's in dev."
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+  packages: read
+
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/sample-code-files
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    environment: production   # configure required reviewers on this environment
+    steps:
+      - uses: actions/checkout@v5
+      - name: Normalise image name
+        run: echo "IMAGE=${IMAGE,,}" >> "$GITHUB_ENV"
+      - name: Resolve tag
+        id: tag
+        run: |
+          TAG="${{ inputs.tag }}"
+          if [ -z "$TAG" ]; then
+            TAG=$(kubectl kustomize k8s/overlays/dev | grep -oE 'sample-code-files:sha-[0-9a-f]+' | head -1 | cut -d: -f2)
+          fi
+          [ -n "$TAG" ] || { echo "Could not determine tag"; exit 1; }
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+      - uses: sigstore/cosign-installer@v3
+      - name: Verify signature before promoting (supply-chain gate)
+        run: |
+          cosign verify "$IMAGE:${{ steps.tag.outputs.tag }}" \
+            --certificate-identity-regexp "^https://github.com/${{ github.repository }}/.github/workflows/ci.yml@refs/heads/main$" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com
+      - name: Bump prod overlay
+        working-directory: k8s/overlays/prod
+        run: kustomize edit set image sample-code-files=$IMAGE:${{ steps.tag.outputs.tag }}
+      - name: Open promotion PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: promote/prod-${{ steps.tag.outputs.tag }}
+          title: "deploy(prod): ${{ steps.tag.outputs.tag }}"
+          commit-message: "deploy(prod): ${{ steps.tag.outputs.tag }}"
+          body: |
+            Promotes `${{ steps.tag.outputs.tag }}` (cosign signature verified) to **prod**.
+            ArgoCD (`flask-demo-prod`) will sync automatically once this PR is merged.
+          labels: deployment,prod

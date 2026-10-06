@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-gitops-demo
+  name: sample-code-files
   labels:
-    app.kubernetes.io/name: flask-gitops-demo
+    app.kubernetes.io/name: sample-code-files
 spec:
   replicas: 2
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app.kubernetes.io/name: flask-gitops-demo
+      app.kubernetes.io/name: sample-code-files
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: flask-gitops-demo
+        app.kubernetes.io/name: sample-code-files
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
@@ -34,7 +34,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: app
-          image: flask-gitops-demo   # placeholder; overlays set registry + tag
+          image: sample-code-files   # placeholder; overlays set registry + tag
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -43,7 +43,7 @@ spec:
             - name: APP_ENV
               valueFrom:
                 configMapKeyRef:
-                  name: flask-gitops-demo
+                  name: sample-code-files
                   key: APP_ENV
           resources:
             requests:
