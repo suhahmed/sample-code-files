@@ -9,18 +9,18 @@ labels:
       app.kubernetes.io/environment: dev
     includeSelectors: false
 patches:
-  - target: { kind: Deployment, name: flask-gitops-demo }
+  - target: { kind: Deployment, name: sample-code-files }
     patch: |-
       - op: replace
         path: /spec/replicas
         value: 1
-  - target: { kind: ConfigMap, name: flask-gitops-demo }
+  - target: { kind: ConfigMap, name: sample-code-files }
     patch: |-
       - op: replace
         path: /data/APP_ENV
         value: dev
 # The CI pipeline updates newTag (dev automatically; prod via promotion PR).
 images:
-  - name: flask-gitops-demo
-    newName: ghcr.io/OWNER/flask-gitops-demo
+  - name: sample-code-files
+    newName: ghcr.io/suhahmed/sample-code-files
     newTag: latest

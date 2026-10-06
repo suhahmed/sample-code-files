@@ -5,9 +5,9 @@ metadata:
   name: flask-demo
   namespace: argocd
 spec:
-  description: flask-gitops-demo environments
+  description: sample-code-files environments
   sourceRepos:
-    - https://github.com/OWNER/flask-gitops-demo.git
+    - https://github.com/suhahmed/sample-code-files.git
   destinations:
     - server: https://kubernetes.default.svc
       namespace: flask-demo-dev

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-gitops-demo
+  name: sample-code-files
   labels:
-    app.kubernetes.io/name: flask-gitops-demo
+    app.kubernetes.io/name: sample-code-files
 spec:
   type: ClusterIP
   selector:
-    app.kubernetes.io/name: flask-gitops-demo
+    app.kubernetes.io/name: sample-code-files
   ports:
     - name: http
       port: 80

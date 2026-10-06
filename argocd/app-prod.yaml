@@ -10,7 +10,7 @@ metadata:
 spec:
   project: flask-demo
   source:
-    repoURL: https://github.com/OWNER/flask-gitops-demo.git
+    repoURL: https://github.com/suhahmed/sample-code-files.git
     targetRevision: main
     path: k8s/overlays/prod
   destination:

@@ -1,4 +1,4 @@
-# flask-gitops-demo — DevSecOps CI/CD with GitHub Actions + ArgoCD
+# sample-code-files — DevSecOps CI/CD with GitHub Actions + ArgoCD
 
 A small Flask service with a complete **GitOps** pipeline: GitHub Actions builds, tests, scans,
 signs and publishes the image; ArgoCD pulls the desired state from this repo and deploys it.
@@ -55,7 +55,7 @@ CI never holds cluster credentials.
    ```
    (and add `imagePullSecrets` to the Deployment).
 5. **Private repo?** Register it with ArgoCD:
-   `argocd repo add https://github.com/<owner>/flask-gitops-demo.git --username <user> --password <PAT>`
+   `argocd repo add https://github.com/<owner>/sample-code-files.git --username <user> --password <PAT>`
 6. **Bootstrap ArgoCD** (one time):
    ```bash
    kubectl apply -n argocd -f argocd/root-app.yaml
@@ -67,7 +67,7 @@ CI never holds cluster credentials.
 ## Day-to-day flow
 
 - **Feature work**: open a PR → all checks run (no image push). Merge when green.
-- **Dev deploy**: merge to `main` → image `ghcr.io/<owner>/flask-gitops-demo:sha-xxxxxxx` is pushed,
+- **Dev deploy**: merge to `main` → image `ghcr.io/<owner>/sample-code-files:sha-xxxxxxx` is pushed,
   signed, and its tag committed to `k8s/overlays/dev` → ArgoCD syncs dev.
 - **Prod deploy**: *Actions → Promote to prod → Run* (optionally pass a tag). The job verifies the
   cosign signature came from this repo's `ci.yml` on `main`, then opens a PR. Merge it → ArgoCD syncs prod.
@@ -82,13 +82,13 @@ pip install -r requirements-dev.txt
 ruff check . && ruff format --check . && pytest
 bandit -r app -ll && pip-audit -r requirements.txt --strict
 kubectl kustomize k8s/overlays/dev
-docker build -t flask-gitops-demo . && docker run -p 8080:8080 flask-gitops-demo
+docker build -t sample-code-files . && docker run -p 8080:8080 sample-code-files
 ```
 
 ```bash
 # Verify a published image's signature yourself
-cosign verify ghcr.io/<owner>/flask-gitops-demo:sha-xxxxxxx \
-  --certificate-identity-regexp '^https://github.com/<owner>/flask-gitops-demo/.github/workflows/ci.yml@refs/heads/main$' \
+cosign verify ghcr.io/<owner>/sample-code-files:sha-xxxxxxx \
+  --certificate-identity-regexp '^https://github.com/<owner>/sample-code-files/.github/workflows/ci.yml@refs/heads/main$' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 
