@@ -1,0 +1,25 @@
+# Prod: GitOps promotion via PR (human approval), sync is automated once merged
+# but without auto-prune, so accidental deletions in git don't remove live resources.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flask-demo-prod
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: flask-demo
+  source:
+    repoURL: https://github.com/OWNER/flask-gitops-demo.git
+    targetRevision: main
+    path: k8s/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: flask-demo-prod
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 3
+      backoff: { duration: 15s, factor: 2, maxDuration: 3m }

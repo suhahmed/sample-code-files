@@ -1,0 +1,9 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: flask-gitops-demo
+spec:
+  maxUnavailable: 1   # safe with 1 replica (dev) and 3 (prod)
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: flask-gitops-demo

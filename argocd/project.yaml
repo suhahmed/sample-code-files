@@ -1,0 +1,29 @@
+# AppProject scopes what these Applications may deploy (least privilege).
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: flask-demo
+  namespace: argocd
+spec:
+  description: flask-gitops-demo environments
+  sourceRepos:
+    - https://github.com/OWNER/flask-gitops-demo.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: flask-demo-dev
+    - server: https://kubernetes.default.svc
+      namespace: flask-demo-prod
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - { group: "", kind: ConfigMap }
+    - { group: "", kind: Service }
+    - { group: apps, kind: Deployment }
+    - { group: networking.k8s.io, kind: NetworkPolicy }
+    - { group: policy, kind: PodDisruptionBudget }
+  roles:
+    - name: ci-readonly
+      description: Read-only access for CI status checks
+      policies:
+        - p, proj:flask-demo:ci-readonly, applications, get, flask-demo/*, allow

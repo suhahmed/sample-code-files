@@ -1,0 +1,14 @@
+# Default-deny ingress except HTTP to the app port.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: flask-gitops-demo
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: flask-gitops-demo
+  policyTypes: ["Ingress"]
+  ingress:
+    - ports:
+        - port: 8080
+          protocol: TCP
