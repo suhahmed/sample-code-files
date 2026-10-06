@@ -83,7 +83,7 @@ jobs:
             ./kubeconform -strict -summary rendered-$env.yaml
           done
       - name: Trivy misconfiguration scan (Dockerfile + K8s)
-        uses: aquasecurity/trivy-action@0.33.1
+	uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: config
           scan-ref: .
@@ -121,7 +121,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Trivy image scan (gate on HIGH/CRITICAL fixable CVEs)
-        uses: aquasecurity/trivy-action@0.33.1
+	uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: local/app:scan
           severity: HIGH,CRITICAL
@@ -129,7 +129,7 @@ jobs:
           exit-code: "1"
       - name: Trivy SARIF -> GitHub Security tab
         if: always()
-        uses: aquasecurity/trivy-action@0.33.1
+	uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: local/app:scan
           format: sarif
