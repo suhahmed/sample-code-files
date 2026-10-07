@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: flask-demo
+  name: sample-code-files
   namespace: argocd
 spec:
   description: sample-code-files environments
@@ -10,9 +10,9 @@ spec:
     - https://github.com/suhahmed/sample-code-files.git
   destinations:
     - server: https://kubernetes.default.svc
-      namespace: flask-demo-dev
+      namespace: sample-code-files-dev
     - server: https://kubernetes.default.svc
-      namespace: flask-demo-prod
+      namespace: sample-code-files-prod
   clusterResourceWhitelist:
     - group: ""
       kind: Namespace
@@ -26,4 +26,4 @@ spec:
     - name: ci-readonly
       description: Read-only access for CI status checks
       policies:
-        - p, proj:flask-demo:ci-readonly, applications, get, flask-demo/*, allow
+        - p, proj:sample-code-files:ci-readonly, applications, get, sample-code-files/*, allow

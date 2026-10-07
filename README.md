@@ -14,8 +14,8 @@ CI never holds cluster credentials.
                          └─ 6. main only: bump tag in k8s/overlays/dev → commit
                                               │
                     ArgoCD (in cluster) ◄─────┘ watches k8s/overlays/*
-                         ├─ flask-demo-dev   auto-sync + prune + self-heal
-                         └─ flask-demo-prod  syncs after a reviewed "promote" PR is merged
+                         ├─ sample-code-files-dev   auto-sync + prune + self-heal
+                         └─ sample-code-files-prod  syncs after a reviewed "promote" PR is merged
 ```
 
 ## Repo layout
@@ -50,7 +50,7 @@ CI never holds cluster credentials.
 4. **Package visibility**: after the first push, make the GHCR package public, *or* give the cluster a pull
    secret:
    ```bash
-   kubectl create secret docker-registry ghcr -n flask-demo-dev \
+   kubectl create secret docker-registry ghcr -n sample-code-files-dev \
      --docker-server=ghcr.io --docker-username=<user> --docker-password=<PAT with read:packages>
    ```
    (and add `imagePullSecrets` to the Deployment).
@@ -59,7 +59,7 @@ CI never holds cluster credentials.
 6. **Bootstrap ArgoCD** (one time):
    ```bash
    kubectl apply -n argocd -f argocd/root-app.yaml
-   argocd app list   # flask-demo-root, flask-demo-dev, flask-demo-prod
+   argocd app list   # sample-code-files-root, sample-code-files-dev, sample-code-files-prod
    ```
 7. *(Optional)* Add a GitHub webhook → `https://<argocd-host>/api/webhook` for instant syncs instead of
    the ~3 min poll.
@@ -71,7 +71,7 @@ CI never holds cluster credentials.
   signed, and its tag committed to `k8s/overlays/dev` → ArgoCD syncs dev.
 - **Prod deploy**: *Actions → Promote to prod → Run* (optionally pass a tag). The job verifies the
   cosign signature came from this repo's `ci.yml` on `main`, then opens a PR. Merge it → ArgoCD syncs prod.
-- **Rollback**: `git revert` the deploy commit (or `argocd app rollback flask-demo-prod`; self-heal will
+- **Rollback**: `git revert` the deploy commit (or `argocd app rollback sample-code-files-prod`; self-heal will
   re-apply git afterwards, so revert in git to make it stick).
 
 ## Verify locally

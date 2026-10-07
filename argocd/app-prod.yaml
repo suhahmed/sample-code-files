@@ -3,19 +3,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: flask-demo-prod
+  name: sample-code-files-prod
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: flask-demo
+  project: sample-code-files
   source:
     repoURL: https://github.com/suhahmed/sample-code-files.git
     targetRevision: main
     path: k8s/overlays/prod
   destination:
     server: https://kubernetes.default.svc
-    namespace: flask-demo-prod
+    namespace: sample-code-files-prod
   syncPolicy:
     automated:
       prune: false
