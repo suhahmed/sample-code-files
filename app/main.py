@@ -15,7 +15,7 @@ def create_app() -> Flask:
     @app.get("/")
     def index():
         REQUESTS.labels(endpoint="/").inc()
-        return jsonify(message="Hello from my-kubernetes-cluster/sample-code-files", version=APP_VERSION)
+        return jsonify(message="Hello from my-kubernetes/sample-code-files", version=APP_VERSION)
 
     @app.get("/healthz")
     def healthz():
