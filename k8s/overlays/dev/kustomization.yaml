@@ -26,4 +26,4 @@ patches:
 images:
 - name: sample-code-files
   newName: ghcr.io/suhahmed/sample-code-files
-  newTag: sha-1b23395
+  newTag: sha-991ff0f
