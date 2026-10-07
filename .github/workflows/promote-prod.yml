@@ -52,5 +52,5 @@ jobs:
           commit-message: "deploy(prod): ${{ steps.tag.outputs.tag }}"
           body: |
             Promotes `${{ steps.tag.outputs.tag }}` (cosign signature verified) to **prod**.
-            ArgoCD (`flask-demo-prod`) will sync automatically once this PR is merged.
+            ArgoCD (`sample-code-files`) will sync automatically once this PR is merged.
           labels: deployment,prod
