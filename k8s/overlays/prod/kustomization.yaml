@@ -2,25 +2,28 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: flask-demo-prod
 resources:
-  - namespace.yaml
-  - ../../base
+- namespace.yaml
+- ../../base
 labels:
-  - pairs:
-      app.kubernetes.io/environment: prod
-    includeSelectors: false
+- pairs:
+    app.kubernetes.io/environment: prod
 patches:
-  - target: { kind: Deployment, name: sample-code-files }
-    patch: |-
-      - op: replace
-        path: /spec/replicas
-        value: 3
-  - target: { kind: ConfigMap, name: sample-code-files }
-    patch: |-
-      - op: replace
-        path: /data/APP_ENV
-        value: prod
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 3
+  target:
+    kind: Deployment
+    name: sample-code-files
+- patch: |-
+    - op: replace
+      path: /data/APP_ENV
+      value: prod
+  target:
+    kind: ConfigMap
+    name: sample-code-files
 # The CI pipeline updates newTag (dev automatically; prod via promotion PR).
 images:
-  - name: sample-code-files
-    newName: ghcr.io/suhahmed/sample-code-files
-    newTag: latest
+- name: sample-code-files
+  newName: ghcr.io/suhahmed/sample-code-files
+  newTag: sha-da0d1be
