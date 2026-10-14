@@ -73,7 +73,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Hadolint (Dockerfile best practices)
-        uses: hadolint/hadolint-action@v3.1.0
+        uses: hadolint/hadolint-action@v3.5.0
         with: { dockerfile: Dockerfile, failure-threshold: warning }
       - name: Render overlays & validate schemas (kubeconform)
         run: |
