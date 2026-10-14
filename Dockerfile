@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 # ---- build stage: install deps into a venv ----
-FROM python:3.12-slim AS build
+FROM python:3.14-slim AS build
 WORKDIR /src
 RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
@@ -8,7 +8,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # ---- runtime stage: minimal, non-root ----
-FROM python:3.12-slim
+FROM python:3.14-slim
 ARG APP_VERSION=dev
 ENV PATH="/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
