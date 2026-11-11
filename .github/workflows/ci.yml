@@ -27,7 +27,7 @@ jobs:
     name: Lint & unit tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -49,7 +49,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with: { fetch-depth: 0 }   # full history for secret scanning
       - uses: actions/setup-python@v6
         with: { python-version: "${{ env.PYTHON_VERSION }}" }
@@ -71,7 +71,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Hadolint (Dockerfile best practices)
         uses: hadolint/hadolint-action@v3.1.0
         with: { dockerfile: Dockerfile, failure-threshold: warning }
@@ -104,7 +104,7 @@ jobs:
       tag: ${{ steps.vars.outputs.tag }}
       digest: ${{ steps.push.outputs.digest }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Normalise image name (GHCR requires lowercase)
         run: echo "IMAGE_NAME=${IMAGE_NAME,,}" >> "$GITHUB_ENV"
       - id: vars
@@ -189,7 +189,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Normalise image name (GHCR requires lowercase)
         run: echo "IMAGE_NAME=${IMAGE_NAME,,}" >> "$GITHUB_ENV"
       - name: Set image tag in dev overlay

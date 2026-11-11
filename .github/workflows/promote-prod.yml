@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production   # configure required reviewers on this environment
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Normalise image name
         run: echo "IMAGE=${IMAGE,,}" >> "$GITHUB_ENV"
       - name: Resolve tag
